@@ -1,7 +1,7 @@
 # Sofía Arceo Covarrubias || Oskar Franz Chávez
 
 .data 
-.eqv discos 4
+.eqv discos 8
 .text
 
 MAIN:
@@ -16,30 +16,18 @@ sw a7, 0(s1)
 addi s1, s1, 4
 bne a7, s0, fill_t1 #inicializamos las torre origen con el numero de discos
 addi a7, zero, 0
-fill_t2:
-addi a7, a7, 1
-sw zero, 0(s1)
-addi s1, s1, 4
-bne a7, s0, fill_t2 #inicializamos las torres aux
-addi a7, zero, 0
-fill_t3:
-addi a7, a7, 1
-sw zero, 0(s1)
-addi s1, s1, 4
-bne a7, s0, fill_t3 #inicializamos las torre destino
+#
 lui s1, 0x10010 #Restablecemos la direccion primer arreglo (posicionado al inicio en data)
 add a3, zero, s1 #(Arreglo origen)
 addi t1, zero, 4
-MUL: #para multiplicar y sacar el offset del segundo arreglo
-addi a6, a6, 1
-add s2, s2, t1 #Offset del segundo arreglo
-bne a6, s0, MUL
-add a5, a3, s2 #(Arreglo auxiliar)
-addi t1, t1, 4
-mul s3, s11, t1 #Offset del tercer arreglo
-add a4, a3, s3 #(Arreglo destino)
-add a2, zero, s0 # Discos actuales
+addi s2, zero, discos
+addi a7, zero, 2
+sll s2, s2, a7 # Recorremos 2 posiciones ndiscos para dar el offset del segundo arreglo
+add a5, a3, s2 # Añadimos el offset a la direccion del primer arreglo para obtener la direccion de inicio del segundo arreglo
 addi t0, zero, 1 # uno (constante)
+sll s3, s2, t0 # Recorremos una vez mas el offset del segundo arreglo para obtener el offset del tercer arreglo
+add a4, a3, s3 # Añadimos el offset a la dirección del primer arreglo para obtener la dirección de inicio del tercer arreglo
+add a2, zero, s0 # Discos actuales
 addi s5, zero, 0
 jal ra, HANOI
 jal zero, EXIT
